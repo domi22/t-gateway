@@ -20,11 +20,7 @@ spring:
           enable: true  #是否与注册中心结合路由。 默认false
       locator:
         lowerCaseServiceId: false #设置识别小写（eureka默认识别大写）
-      routes:                      # GatewayProperties 对应配置类
-        - id: after_route
-          uri: http://baidu.com
-          predicates:
-            - Path=/baidu
+      routes:                      # GatewayProperties 对应配置类， 命中前面的规则-id，则不会执行后面的-id规则
         - id: user_route
           uri: lb://org-note-user/
           predicates:
@@ -35,14 +31,9 @@ spring:
             - AddResponseHeader=X-Response-Foo55,Barss37
             - name: Retry
               args:
-                retries: 8
+                retries: 2
                 statuses: BAD_GATEWAY
                 methods: POST,PUT,GET
-        - id: mdm_route
-          uri: lb://org-note-mdm/   #默认只识别大写，lowerCaseServiceId=false 时候能识别小写lb
-          predicates:
-            - Path=/org-note-mdm/**
-
 
 #-----------------------------------注册到注册中心[开始]--------------------------------------------------
 eureka:
